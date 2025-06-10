@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import emailjs from "@emailjs/browser";
 import { toast } from "react-toastify";
 
+import axios from "axios";
 const Contact = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -12,35 +12,37 @@ const Contact = () => {
   const [loading, setLoading] = useState(false);
 
   const navigateTo = useNavigate();
-  const handleContactForm = (e) => {
+  const handleContactForm = async(e) => {
     e.preventDefault();
     setLoading(true);
 
-    const templateParams = {
+    const data = {
       name,
       email,
       phone,
       subject,
       message,
     };
+    try{
+      const response = await axios.post(
+      "http://localhost:5000/api/v1/contact",
+      data,
+      {
+        withCredentials: true,
+        headers: { "Content-Type": "application/json" },
+      }
+    );
 
-    emailjs
-      .send(
-        "service_emsm0n5",
-        "template_3z88m8h",
-        templateParams,
-        "F0mJcg3T-o-SQ63-d"
-      )
-      .then(() => {
-        toast.success("Thank You! Your message has been sent successfully.");
-        setLoading(false);
-        navigateTo("/");
-      })
-      .catch((err) => {
-        toast.error("Failed to send message.");
-        setLoading(false);
-      });
-  };
+  
+    setLoading(false); 
+    toast.success("your form is submitted and deatils sent to admin");
+    navigateTo('/');
+    }
+    catch(err){
+      toast.error("OOPS ASomething went wrong!!!")
+    }
+    
+    };
 
   return (
     <>
