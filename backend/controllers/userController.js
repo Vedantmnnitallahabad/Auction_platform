@@ -41,7 +41,7 @@ export const register = catchAsyncErrors(async (req, res, next) => {
     }
     if (!AccountNumber) {
       return next(
-        new ErrorHandler("Please provide your easypaisa account number.", 400)
+        new ErrorHandler("Please provide your  account number.", 400)
       );
     }
    
