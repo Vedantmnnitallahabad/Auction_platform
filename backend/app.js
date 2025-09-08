@@ -48,9 +48,6 @@ app.post('/api/v1/contact', async (req, res) => {
 
   try {
 
-   
-
-
     const adminEmails = await User.find({ role: "Super Admin" }).distinct('email');
 
     

@@ -135,3 +135,4 @@ export const fetchLeaderboard = catchAsyncErrors(async (req, res, next) => {
     leaderboard,
   });
 });
+ 

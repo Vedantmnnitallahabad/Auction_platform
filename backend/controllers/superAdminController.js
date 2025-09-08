@@ -79,14 +79,28 @@ export const deletePaymentProof = catchAsyncErrors(async (req, res, next) => {
     message: "Payment proof deleted.",
   });
 });
+const currentYear = new Date().getFullYear();
 
 export const fetchAllUsers = catchAsyncErrors(async (req, res, next) => {
   const users = await User.aggregate([
+     
     {
+
+     $match: {
+      createdAt: {
+        $gte: new Date(`${currentYear}-01-01`),
+        $lt: new Date(`${currentYear + 1}-01-01`),
+      },
+    },
+  },
+  
+    
+    {
+      
       $group: {
         _id: {
           month: { $month: "$createdAt" },
-          year: { $month: "$createdAt" },
+          year: { $year: "$createdAt" },
           role: "$role",
         },
         count: { $sum: 1 },
@@ -104,6 +118,7 @@ export const fetchAllUsers = catchAsyncErrors(async (req, res, next) => {
     {
       $sort: { year: 1, month: 1 },
     },
+  
   ]);
 
   const bidders = users.filter((user) => user.role === "Bidder");
@@ -131,6 +146,16 @@ export const fetchAllUsers = catchAsyncErrors(async (req, res, next) => {
 
 export const monthlyRevenue = catchAsyncErrors(async (req, res, next) => {
   const payments = await Commission.aggregate([
+
+    {
+
+     $match: {
+      createdAt: {
+        $gte: new Date(`${currentYear}-01-01`),
+        $lt: new Date(`${currentYear + 1}-01-01`),
+      },
+    },
+  },
     {
       $group: {
         _id: {
